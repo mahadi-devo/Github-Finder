@@ -1,70 +1,35 @@
-import Axios from 'axios';
-import React, { Component } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/layouts/Navbar';
-import Users from './components/users/Users';
-import Search from './components/users/Search';
+import User from './components/users/User';
+import Home from './components/Pages/Home';
 import Alert from './components/layouts/Alert';
+import NotFound from './components/Pages/NotFound';
 
-class App extends Component {
-  state = {
-    users: [],
-    loading: false,
-    alert: null,
-  };
+import GithubState from './context/github/GithubState';
+import AlertState from './context/alert/AlertState';
 
-  // async componentDidMount() {
-  //   this.setState({ loading: true });
-
-  //   const res = await Axios.get(
-  //     `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-  //   );
-
-  //   this.setState({ users: res.data, loading: false });
-  // }
-
-  // Search User
-  searchUsers = async (text) => {
-    this.setState({ loading: true });
-
-    const res = await Axios.get(
-      `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-
-    this.setState({ users: res.data.items, loading: false });
-  };
-
-  // Clear Users
-  clearUsers = () => {
-    this.setState({ users: [], loading: false });
-  };
-
-  // showAlert
-  showAlert = (msg, type) => {
-    this.setState({ alert: { msg, type } });
-
-    setTimeout(() => this.setState({ alert: null }), 5000);
-  };
-
-  render() {
-    const { users, loading } = this.state;
-
-    return (
-      <div className='App'>
-        <Navbar />
-        <div className='container'>
-          <Alert alert={this.state.alert} />
-          <Search
-            searchUsers={this.searchUsers}
-            clearUsers={this.clearUsers}
-            showClear={users.length > 0 ? true : false}
-            showAlert={this.showAlert}
-          />
-          <Users loading={loading} users={users} />
-        </div>
-      </div>
-    );
-  }
-}
+const App = () => {
+  return (
+    <GithubState>
+      <AlertState>
+        <Router>
+          <div className='App'>
+            <Navbar />
+            <div className='container'>
+              <Alert />
+              <Switch>
+                <Route exact path='/' component={Home} />
+                <Route exact path='/user/:login' component={User} />
+                <Route component={NotFound} />
+              </Switch>
+            </div>
+          </div>
+        </Router>
+      </AlertState>
+    </GithubState>
+  );
+};
 
 export default App;
