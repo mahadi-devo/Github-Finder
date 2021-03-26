@@ -23,7 +23,7 @@ export default (state, action) => {
       return {
         ...state,
         users: [],
-        loading: false,
+        loading: true,
       };
     case GET_USER:
       return {
