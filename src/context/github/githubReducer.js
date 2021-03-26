@@ -12,7 +12,7 @@ export default (state, action) => {
       return {
         ...state,
         users: action.payload,
-        loading: false,
+        loading: true,
       };
     case SET_LOADING:
       return {
