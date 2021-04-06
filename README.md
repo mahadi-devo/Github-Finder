@@ -1,4 +1,4 @@
-# SEPQM
+# GitHub Finder
 
 > Simple react application using github api to find users
 
